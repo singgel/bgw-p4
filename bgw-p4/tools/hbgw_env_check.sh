@@ -165,10 +165,10 @@ function main()
     check_rc_local
 
     echo "--------------Test frr show running-config---------------"
+    check_bgpd
     check_bgp_cfg
     
     echo "--------------Test bgp state---------------"
-    check_bgpd
     check_bgp_state
     
     echo "--------------Test default route ---------------"
