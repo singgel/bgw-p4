@@ -138,6 +138,18 @@ function check_bgp_state()
     fi
 }
 
+function check_rc_local()
+{
+    RC_LOCAL=`cat /etc/rc.local | grep "service frr stop" | grep -v "#"`
+    exit_str_null "service frr stop is not found in /etc/rc.local!" $RC_LOCAL
+}   
+
+function check_bgpd()
+{
+    BGPD=`ps -ef | grep frr | grep bgpd`
+    exit_str_null "bgpd not found " $BGPD
+}   
+
 function main()
 {
     echo "--------------Test ping hbgw gw ip---------------"
@@ -149,15 +161,19 @@ function main()
     check_lo_vip
     echo "lo is up and vip is ok"
 
-    echo "--------------Test default route ---------------"
-    check_default_route
-    echo "default_route is bgp route"
+    echo "--------------Test /etc/rc.local ---------------"
+    check_rc_local
 
     echo "--------------Test frr show running-config---------------"
     check_bgp_cfg
     
     echo "--------------Test bgp state---------------"
+    check_bgpd
     check_bgp_state
+    
+    echo "--------------Test default route ---------------"
+    check_default_route
+    echo "default_route is bgp route"
 }
 
 main
