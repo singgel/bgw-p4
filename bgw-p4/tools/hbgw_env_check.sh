@@ -91,7 +91,8 @@ function check_bgp_cfg()
     fi
     
     network_num=` vtysh -c "show run" | grep network | wc -l`
-    if [ "$host_if_num" != "$network_num" ];then
+    tmp_num0=`expr 1 + $network_num`
+    if [ "$host_if_num" != "$tmp_num0" ];then
         perror "network_num is wrong"
     fi
 
@@ -150,6 +151,14 @@ function check_bgpd()
     exit_str_null "bgpd not found " $BGPD
 }   
 
+function check_cron_and_syslog()
+{
+    CROND=`ps -ef | grep cron | grep sbin`
+    exit_str_null "cron not found " $CROND
+    SYSLOGD=`ps -ef | grep rsyslogd | grep sbin`
+    exit_str_null "rsyslogd not found " $SYSLOGD
+}
+
 function main()
 {
     echo "--------------Test ping hbgw gw ip---------------"
@@ -161,8 +170,9 @@ function main()
     check_lo_vip
     echo "lo is up and vip is ok"
 
-    echo "--------------Test /etc/rc.local ---------------"
+    echo "--------------Test rc.local and cron---------------"
     check_rc_local
+    check_cron_and_syslog
 
     echo "--------------Test frr show running-config---------------"
     check_bgpd
