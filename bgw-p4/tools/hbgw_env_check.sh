@@ -74,7 +74,7 @@ function check_lo_vip()
 
 function check_default_route()
 {
-    DEV=`ip route | grep default | awk -F " " '{print $5}'`
+    DEV=`ip route | grep default | awk -F " " 'NR==1{print $5}'`
     if [ "$DEV" == "ma1" ];then
         perror "default route via ma1"
     fi
