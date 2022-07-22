@@ -92,4 +92,7 @@
 
 #define __SDE_9_7_SUPPORT__ 1
 
+#define CRC_ADJUST_BYTES 4
+#define BR_ADJUST_BYTES 19
+
 #endif /* _BGW_DEFINES_ */

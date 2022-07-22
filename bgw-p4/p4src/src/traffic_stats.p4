@@ -13,7 +13,7 @@ control IngressPortStats(inout headers_t hdr,
             inout ingress_intrinsic_metadata_for_tm_t  ig_tm_md) {
     DirectCounter<bit<32>>(CounterType_t.PACKETS_AND_BYTES) stats;
 
-    action count() { stats.count(); }
+    action count() { stats.count(CRC_ADJUST_BYTES); }
     table ingress_port_stats  {
         key = {
             hdr.vxlan.isValid()     : exact;
@@ -41,7 +41,7 @@ control IngressVifStats(inout headers_t hdr,
             inout ingress_intrinsic_metadata_for_tm_t  ig_tm_md) {
     DirectCounter<bit<32>>(CounterType_t.PACKETS_AND_BYTES) stats;
 
-    action count() { stats.count(); }
+    action count() { stats.count(CRC_ADJUST_BYTES); }
     table ingress_vif_stats  {
         key = {
             hdr.vxlan.vni    : exact;
@@ -72,7 +72,7 @@ control EgressPortStats(
         inout egress_intrinsic_metadata_for_output_port_t eg_output_md) {
     DirectCounter<bit<32>>(CounterType_t.PACKETS_AND_BYTES) stats;
 
-    action count() { stats.count(); }
+    action count() { stats.count(BR_ADJUST_BYTES); }
     table egress_port_stats  {
         key = {
             hdr.vxlan.isValid()     : exact;
@@ -103,7 +103,7 @@ control EgressVifStats(
         inout egress_intrinsic_metadata_for_output_port_t eg_output_md) {
     DirectCounter<bit<32>>(CounterType_t.PACKETS_AND_BYTES) stats;
 
-    action count() { stats.count(); }
+    action count() { stats.count(BR_ADJUST_BYTES); }
 
     action dscp_replace() {
         stats.count();
