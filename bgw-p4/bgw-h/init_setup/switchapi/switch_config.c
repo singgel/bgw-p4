@@ -18,7 +18,7 @@
 #include "switch_config.h"
 #include "switch_device_int.h"
 
-const char *hostif_json_file = "/opt/hostif.json";
+const char *hostif_json_file = "/etc/hostif.json";
 switch_config_t switch_cfg;
 
 static int get_field_of_string(json_t *section, const char *fieldName, const char **value, int required)
