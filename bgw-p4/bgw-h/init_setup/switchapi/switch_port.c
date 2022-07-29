@@ -30,6 +30,15 @@ static void set_loopback_mode(bf_dev_id_t device, bf_dev_port_t dev_port){
 	}
 
 	if (set_loopback) {
+		bf_status_t status;
+		status = bf_pal_port_mtu_set(device, dev_port, 
+			(SWITCH_PORT_TX_MTU_DEFAULT + MTU_ADJUST), 
+			(SWITCH_PORT_RX_MTU_DEFAULT+ MTU_ADJUST));
+  		if (status != BF_SUCCESS) {
+	  		SETUP_PANIC("bf_pal_port_mtu_set faild status=%d for device %u\n", status, device);
+	  		return ;
+  		}
+  
 		/*loop back port must be fec_none*/
 		if (switch_pd_port_fec_set(device, dev_port, SWITCH_PORT_FEC_MODE_NONE) < 0) {
 			SETUP_PANIC("switch_pd_port_fec_set error!\n");
