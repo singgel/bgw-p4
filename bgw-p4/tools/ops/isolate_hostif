@@ -35,34 +35,83 @@ function exit_str_null()
     fi
 }
 
-function get_vip()
+function get_ip()
 {
-    VIP=`cat /etc/hostif.json  | grep vip  | awk -F '"' 'NR==1{print $4}'`
+    IP=`ifconfig -a $HOSTIF | grep inet | grep -v inet6 | awk -F ' ' '{print $2}'`
+    exit_str_null "$HOSTIF is not found or no ip!" $IP
+    IP_CHECK=`cat /etc/hostif.json | grep $IP`
+    exit_str_null "hostif ip is not fount in /etc/hostif.json!" $IP_CHECK
+    VIP=`cat /etc/hostif.json | grep vip | grep -v backup_vip | awk -F '"' '{print $4}'`
     exit_str_null "vip is not found!" $VIP
-    NETWORK_VIP="network $VIP/32"
+    MIP=`cat /etc/hostif.json | grep mgt_ip | awk -F '"' '{print $4}'`
+    exit_str_null "mgt_ip is not found!" $MIP
+
+    #echo "IP=$IP"
+    #echo "VIP=$VIP"
+    #echo "MIP=$MIP"
 }
 
-function get_router_bgp_as_num()
+function get_prefix-list-name()
 {
-    ROUTE_BGP_AS=`cat /etc/frr/frr.conf  | grep "router bgp"`
-    exit_str_null "router bgp as-number is not found!" $ROUTE_BGP_AS
+   PL_NAME=`cat /etc/frr/frr.conf | grep $IP | grep "ip prefix-list" | awk -F " " '{print $3}'`
+   exit_str_null "prefix-listname is not found!" $PL_NAME
+   #echo "prefix-list name = $PL_NAME"
 }
 
-function bgp_network_vip()
+function get_vip_prefix-list()
 {
-  CMD=`vtysh  -c "configure" -c "$ROUTE_BGP_AS"  -c "$NETWORK_VIP"  -c "exit" -c "exit" -c "exit"`
+    VIP_PREFIX_LIST=` cat /etc/frr/frr.conf | grep "ip prefix-list $PL_NAME" | grep $VIP`
+    exit_str_null "vip prefix-listname is not found!" $VIP_PREFIX_LIST
+    #echo "vip prefix-list is = $VIP_PREFIX_LIST"
+}
+
+function get_mip_prefix-list()
+{
+    MIP_PREFIX_LIST=` cat /etc/frr/frr.conf | grep "ip prefix-list $PL_NAME" | grep $MIP`
+    exit_str_null "mip prefix-listname is not found!" $MIP_PREFIX_LIST
+    #echo "mip prefix-list is = $MIP_PREFIX_LIST"
+}
+
+function no_vip_prefix_list()
+{
+  CMD=`vtysh  -c "configure" -c "no $VIP_PREFIX_LIST" -c "exit" -c "exit"`
   if [ "$?" != "0" ];then
-        perror "network vip fail"
+    perror "no vip prefix-list for $HOSTIF fail"
+  else
+    echo "no vip prefix-list for $HOSTIF ok"
   fi
+}
+
+function no_mip_prefix_list()
+{
+  CMD=`vtysh  -c "configure" -c "no $MIP_PREFIX_LIST" -c "exit" -c "exit"`
+  if [ "$?" != "0" ];then
+    perror "no mip prefix-list for $HOSTIF fail"
+  else
+    echo "no mip prefix-list for $HOSTIF ok"
+  fi
+}
+
+function if_down_hosit()
+{
+    ifconfig $HOSTIF down
+    echo "ifconfig $HOSTIF down"
 }
 
 function main()
 {
-    echo "--------------network vip/32 from bgp---------------"
-    get_vip
-    get_router_bgp_as_num
-    bgp_network_vip
-    echo "network vip ok!"
+    get_ip 
+    get_prefix-list-name
+    get_vip_prefix-list
+    get_mip_prefix-list
+    no_vip_prefix_list
+    no_mip_prefix_list
+    if_down_hosit
 }
+
+if [ $# != 1 ];then
+    perror "$0 Ethernetxx #e.g: $0 Ethernet17"
+fi
+HOSTIF=$1
 
 main
