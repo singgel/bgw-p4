@@ -91,7 +91,7 @@ function check_bgp_cfg()
     fi
     
     network_num=` vtysh -c "show run" | grep network | wc -l`
-    tmp_num0=`expr 1 + $network_num`
+    tmp_num0=`expr $network_num - 1`
     if [ "$host_if_num" != "$tmp_num0" ];then
         perror "network_num is wrong"
     fi
