@@ -25,6 +25,12 @@ def drop_init():
     bf.entry_add_with_drop(pri=system_acl.SYSTEM_PRI)
     bf.tearDown()
 
+def port_stats_get_usage():
+    bf = port_stats.PortStats()
+    bf.setUp(P4_NAME, GRPC_SERVER)
+    bf.ingress_port_usage()
+    bf.tearDown()
+
 def port_stats_get_all():
     bf = port_stats.PortStats()
     bf.setUp(P4_NAME, GRPC_SERVER)

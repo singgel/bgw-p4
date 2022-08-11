@@ -154,11 +154,14 @@ class PortStats(BfRuntimeBase):
             print("PortStats entry_del_all fail")
         else:
             print("PortStats entry_del_all ok")
+    def ingress_port_usage(self):
+        usage = next(self.ingress_port_stats_table.usage_get(self.target))
+        print("ingress_port_usage = ", usage)
 
 if __name__ == "__main__":
     bf = PortStats()
     bf.setUp('bgw_switch','127.0.0.1')
-    print(bf.ingress_port_stats_entry_get(1, 0))
+    bf.ingress_port_usage()
     bf.tearDown()
 
 
