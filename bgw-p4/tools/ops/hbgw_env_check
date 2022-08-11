@@ -92,10 +92,7 @@ function check_bgp_cfg()
     
     network_num=` vtysh -c "show run" | grep network | wc -l`
     tmp_num0=`expr $network_num - 1`
-    if [ "$host_if_num" != "$tmp_num0" ];then
-        perror "network_num is wrong"
-    fi
-
+ 
     match_prefixlist_num=`vtysh -c "show run" | grep "prefix-list" | grep match | wc -l`
     if [ "$bgp_peer_num" != "$match_prefixlist_num" ];then
         perror "bgp_peer_num is neq host_if_num"

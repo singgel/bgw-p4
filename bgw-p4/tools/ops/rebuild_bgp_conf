@@ -162,7 +162,6 @@ function rebuild_bgp_conf
         create_ip_prefixlist
         create_router_map
         bound_router_map
-        network_ip
     done
 }
 
