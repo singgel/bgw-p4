@@ -76,7 +76,7 @@ control P02_Egress(
                tunnel_inner_rewrite.apply(EPP_META);           
             }
             
-            if (hdr.bg_md.tunnel_direct_send != SKIP_TUNNEL_MAC_REWRITE) {
+            if (hdr.bg_md.tunnel_direct_send == MATCH_PACKET) {
                tunnel_mac_rewrite.apply(EPP_META);           
             }
         }
