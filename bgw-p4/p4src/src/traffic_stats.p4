@@ -57,7 +57,7 @@ control IngressVifStats(inout headers_t hdr,
     }
 
     apply {
-        if (hdr.vxlan.isValid()) {
+        if (hdr.vxlan.isValid() && hdr.inner_ipv4.isValid()) {
             ingress_vif_stats.apply();
         }
     }
@@ -131,7 +131,7 @@ control EgressVifStats(
     }
 
     apply {
-        if (hdr.vxlan.isValid()) {
+        if (hdr.vxlan.isValid() && hdr.inner_ipv4.isValid()) {
             egress_vif_stats.apply();
         }
     }
