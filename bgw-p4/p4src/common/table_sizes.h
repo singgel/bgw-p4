@@ -21,16 +21,20 @@ const bit<32> MPATH_NH_SIZE = 64;
 
 const bit<32> METER_BPS_TABLE_SIZE = 256;
 
-const bit<32> VXLAN_RT_TABLE_SIZE = 150000;
+#ifdef BGW_USE_ALPM
+    const bit<32> VXLAN_RT_TABLE_SIZE = 150000;
+#else
+    const bit<32> VXLAN_RT_TABLE_SIZE = 150000;
+#endif
+
 const bit<32> VM_HOSTROUTE_TABLE_SIZE = 1024000;
 
 const bit<32> ROUTE_ECMP_GROUP_TABLE_SZIE = 30720;
 
-const bit<32> NEXTHOP_SIZE = 65535;
-const bit<32> ROUTE_NEXTHOP_SIZE = 65535;
+const bit<32> ROUTE_NEXTHOP_SIZE = 65536;
 
 const bit<32> TUNNEL_MAC_SIZE = 64;
-const bit<32> TUNNEL_INNER_MAC_SIZE = 65535;
+const bit<32> TUNNEL_INNER_MAC_SIZE = 65536;
 
 const bit<32> TUNNEL_DST_TABLE_SIZE = 2048;
 const bit<32> TUNNEL_SRC_TABLE_SIZE = 16;

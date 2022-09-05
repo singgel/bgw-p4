@@ -50,9 +50,11 @@ control VxlanRoute(inout headers_t hdr,
         vxlan_tunnel_fwd();
     }
 
+    #ifdef BGW_USE_ALPM
     @pragma alpm 1
     @pragma alpm_partitions 2048
     @pragma alpm_subtrees_per_partition 2
+    #endif
     table vxlan_route {
         key = {
             meta.tunnel.route_idx : exact;
