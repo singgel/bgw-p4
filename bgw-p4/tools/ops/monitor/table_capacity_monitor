@@ -30,7 +30,7 @@ function exit_str_null()
     fi
 }
 
-DPC_CMD="dpc table-info"
+DPC_CMD="/usr/local/bin/dpc table-info"
 
 function vm_hostroute_mapping_monitor()
 {   
