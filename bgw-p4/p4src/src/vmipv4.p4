@@ -35,7 +35,10 @@ control IngressVmRouteMapping(inout headers_t hdr,
         } else if ( hdr.bg_md.tunnel_nexthop == 0) { 
             //not hit and tunnel_nexthop == 0
             hdr.bg_md.need_drop = 1;
-            route_drop_stats.count(1);
+
+            if (hdr.inner_ipv4.isValid()) {
+                route_drop_stats.count(1);
+            }
         }
     }
 }
